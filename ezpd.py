@@ -1,3 +1,9 @@
+import pandas            as pd
+import numpy             as np
+import matplotlib.pyplot as plt
+import seaborn           as sns
+
+
 def checkDfInfo(df):
     """
     - df: pandas DataFrame
@@ -21,6 +27,24 @@ def checkDfInfo(df):
         print('{:3}) | {:40} | {:15} | {:15} ({:6.2f}%)'.format(i, col, str(df[col].dtype), nb_missing, pr_missing))
     
     print('=' * 93)
+
+
+def plotPearsonCorr(df):
+    """
+    - df: pandas DataFrame with both input and target variables. 
+
+    Note: Please ensure all the value are numerical
+
+    return a Pearson Correlation heatmap
+    """
+
+    corr = df.corr()
+    mask = np.zeros_like(corr, dtype=np.bool)
+    mask[np.triu_indices_from(mask, k=1)] = True  # mask the upper right triangle
+
+    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='RdBu_r')
+    ax.set_title('Pearson Correlation')
+    plt.show()
 
 
 def plotFeatureImportance(feature_importance, columns, n_largest=None):
