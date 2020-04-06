@@ -29,7 +29,7 @@ def checkDfInfo(df):
     print('=' * 93)
 
 
-def plotPearsonCorr(df):
+def plotPearsonCorr(df, figsize=(10,10)):
     """
     - df: pandas DataFrame with both input and target variables. 
 
@@ -41,8 +41,9 @@ def plotPearsonCorr(df):
     corr = df.corr()
     mask = np.zeros_like(corr, dtype=np.bool)
     mask[np.triu_indices_from(mask, k=1)] = True  # mask the upper right triangle
-
-    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='RdBu_r')
+    
+    plt.figure(figsize=figsize)
+    ax = sns.heatmap(corr, mask=mask, square=True, annot=True, fmt='.2f', cmap='RdBu_r')
     ax.set_title('Pearson Correlation')
     plt.show()
 
