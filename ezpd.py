@@ -16,7 +16,8 @@ def checkDfInfo(df, only_na=False):
     nb_rows  = df.shape[0]
     
     print('Number of rows   : ', nb_rows)
-    print('Number of columns: ', len(columns))
+    print('Number of columns: ', len(df.columns))
+    print('Number of columns with missing value: ', len(col_w_na))
     
     print('=' * 93)
     print('{:3}  | {:40} | {:15} | {:25}'.format('Idx', 'Name', 'dtype', 'Nb of Missing Values (%)'))
