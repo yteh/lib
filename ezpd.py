@@ -43,12 +43,12 @@ def plotPearsonCorr(df, figsize=(10,10)):
     mask[np.triu_indices_from(mask, k=1)] = True  # mask the upper right triangle
     
     plt.figure(figsize=figsize)
-    ax = sns.heatmap(corr, mask=mask, square=True, annot=True, fmt='.2f', cmap='RdBu_r')
+    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='RdBu_r')
     ax.set_title('Pearson Correlation')
     plt.show()
 
 
-def plotFeatureImportance(feature_importance, columns, n_largest=None):
+def plotFeatureImportance(feature_importance, columns, n_largest=None, figsize=(12,12)):
     """
     - feature_importance: 1-D array/list contain the coef for each features
     - columns           : list of features name
@@ -62,6 +62,7 @@ def plotFeatureImportance(feature_importance, columns, n_largest=None):
     feat_imp.columns = ['Features', 'Coef']
     top_n_feat = feat_imp.nlargest(n_largest, 'Coef')
 
+    plt.figure(figsize=figsize)
     ax = sns.barplot(x='Coef', y='Features', data=top_n_feat)
     ax.set_title(f'Top %d Feature Importance' % n_largest)
     plt.show()
