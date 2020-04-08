@@ -4,15 +4,16 @@ import matplotlib.pyplot as plt
 import seaborn           as sns
 
 
-def checkDfInfo(df):
+def checkDfInfo(df, only_na=False):
     """
     - df: pandas DataFrame
     
     return a pretty print DataFrame info
     """
     
-    columns = df.columns
-    nb_rows = df.shape[0]
+    col_w_na = [col for col in df.columns if df.loc[df[col].isna() == True, col].shape[0] > 0]
+    columns  = df.columns if only_na == False else col_w_na
+    nb_rows  = df.shape[0]
     
     print('Number of rows   : ', nb_rows)
     print('Number of columns: ', len(columns))
