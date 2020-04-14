@@ -53,7 +53,7 @@ def plotPearsonCorr(df, figsize=(10,10)):
 def plotFeatureImportance(feature_importance, columns, n_largest=None, figsize=(12,12)):
     """
     - feature_importance: 1-D array/list contain the coef for each features
-    - columns           : list of features name
+    - columns           : 1-D list of features name
     - n_largest         : top n importance features to plot (default = plot all)
 
     return a horizontal bar plot of n_largest feature importance

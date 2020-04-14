@@ -161,6 +161,38 @@ class RegressionSelector:
         return feat_imp[feat_imp > 0].index
 
 
+    @staticmethod
+    def singleValueElimination(df, cols=[], verbose=True):
+        """
+        - df      : pandas DataFrame, containing both input and target
+        - cols    : available columns for elimination
+        - verbose : print the feature importance (default = True)
+
+        return list of selected features
+        """
+
+        cols = [*df.columns] if len(cols) == 0 else cols
+        singleValueFilter = lambda num: True if num == 1 else False
+
+        # loop through each feature
+        for idx, col in enumerate(cols):
+
+            # count the unq value on each feature
+            unq_count  = df[col].value_counts().to_dict()
+            key, val   = unq_count.keys(), unq_count.values()
+            nb_single = sum(list(map(singleValueFilter, val)))  # calculate the number of features with single value
+
+            # check if all the unique has only one unique value
+            if nb_single == len(key) or nb_single == len(key) - 1:
+                del cols[idx]
+
+                if verbose: print('Dropping feature {:3}: {}'.format(idx, col))
+
+
+        return cols
+            
+
+
 
 
 
