@@ -197,7 +197,7 @@ class RegressionSelector:
             ax.set_title('MSE score per alpha/folds')
             plt.show()
 
-        return feat_imp[feat_imp > 0].index
+        return feat_imp
 
 
     @staticmethod
