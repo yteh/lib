@@ -74,8 +74,8 @@ class DataTransform:
             dummies = pd.get_dummies(df[col], prefix=col)
             df      = pd.concat([df, dummies], axis=1)
 
-            # drop the orginal column
-            df.drop(columns=[col], axis=1)
+        # drop the orginal column
+        df = df.drop(columns=cols, axis=1)
 
         return df
 

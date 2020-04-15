@@ -45,7 +45,7 @@ class RegressionSelector:
         """
         return a barplot of eliminated features by the Elimination method called
         """
-        
+
         if not self.elim_feat_:
             print('Please called \'Elimination\' method before plotting')
             return False
@@ -60,7 +60,7 @@ class RegressionSelector:
         plt.show()
 
 
-    def backwardElimination(self, df, target='', p_thresh=0.05, verbose=True):
+    def backwardElimination(self, df, target, p_thresh=0.05, verbose=True):
         """
         - df       : pandas DataFrame
         - target   : string, the name of the target
