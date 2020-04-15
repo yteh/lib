@@ -30,8 +30,37 @@ class RegressionSelector:
     specifically features with continuos value 
     """
 
-    @staticmethod
-    def backwardElimination(df, target='', p_thresh=0.05, verbose=True):
+    def __init__(self):
+        self.elim_feat_ = {}
+
+    
+    def __recordEliminatedFeature(self, col):
+        if col not in self.elim_feat_:
+            self.elim_feat_[col] = 1
+        else: 
+            self.elim_feat_[col] += 1
+
+
+    def plotEliminatedFeatures(self):
+        """
+        return a barplot of eliminated features by the Elimination method called
+        """
+        
+        if not self.elim_feat_:
+            print('Please called \'Elimination\' method before plotting')
+            return False
+
+
+        cols, rank = self.elim_feat_.keys(), self.elim_feat_.values()
+
+        ax = sns.barplot(x=cols, y=rank)
+        ax.set_title('Ranking for each Eliminated Features')
+        ax.set_xlabel('Eliminated Features')
+        ax.set_ylabel('Rank')
+        plt.show()
+
+
+    def backwardElimination(self, df, target='', p_thresh=0.05, verbose=True):
         """
         - df       : pandas DataFrame
         - target   : string, the name of the target
@@ -65,17 +94,19 @@ class RegressionSelector:
 
                 cols.remove(idxmax_pvalue)
                 rmse.append(rmse_score)
+                self.__recordEliminatedFeature(cols[idxmax_pvalue])
             else:
                 break
 
         # plot 
-        if verbose: plotScores(rmse)
+        if verbose: 
+            print()
+            plotScores(rmse)
 
         return cols
 
 
-    @staticmethod
-    def recursiveFeatureElimination(df, target, model, verbose=True):
+    def recursiveFeatureElimination(self, df, target, model, verbose=True):
         """
         - df      : pandas DataFrame, containing both input and target
         - target  : string, the name of the target
@@ -121,17 +152,20 @@ class RegressionSelector:
         feat_drp = feat_imp[feat_imp == False].index
         feat_imp = feat_imp[feat_imp == True].index
 
+        # record the eliminated features
+        list(map(self.__recordEliminatedFeature, feat_drp))
+
         if verbose: 
             print('Optimal Number of Features: {} (R2 score = {:.3f})'.format(optimal_nof, max(scores)))
             print('Drop Features: ', feat_drp)
             print('Selected Features: ', feat_imp)
+            print()
             plotScores(scores, metric_name='R2 Score')
 
         return feat_imp
 
 
-    @staticmethod
-    def LassoElimination(df, target, verbose=True):
+    def LassoElimination(self, df, target, verbose=True):
         """
         - df      : pandas DataFrame, containing both input and target
         - target  : string, the name of the target
@@ -147,9 +181,14 @@ class RegressionSelector:
         model  = LassoCV(alphas=alphas)
         model.fit(x, y)
         feat_imp = pd.Series(model.coef_, index=x.columns)
+        feat_drp = feat_imp[feat_imp <= 0].index
+        feat_imp = feat_imp[feat_imp > 0].index
+
+        # record the eliminated features
+        list(map(self.__recordEliminatedFeature, feat_drp))
 
         if verbose:
-            print('Optimal alpha value: {} (R2 score = {:.3f})'.format(model.alpha_, model.score(x, y)))
+            print('Optimal alpha value: {} (R2 score = {:.3f})\n'.format(model.alpha_, model.score(x, y)))
 
             ax = sns.heatmap(np.sqrt(model.mse_path_), annot=True, fmt='.2f', cmap='RdBu_r')
             ax.set_xlabel('N Fold')
@@ -165,13 +204,13 @@ class RegressionSelector:
     def singleValueElimination(df, cols=[], verbose=True):
         """
         - df      : pandas DataFrame, containing both input and target
-        - cols    : available columns for elimination
+        - cols    : 1-D list of available columns for elimination
         - verbose : print the feature importance (default = True)
 
         return list of selected features
         """
 
-        cols = [*df.columns] if len(cols) == 0 else cols
+        cols = list(df.columns) if len(cols) == 0 else list(cols)
         singleValueFilter = lambda num: True if num == 1 else False
 
         # loop through each feature
@@ -188,6 +227,7 @@ class RegressionSelector:
 
                 if verbose: print('Dropping feature {:3}: {}'.format(idx, col))
 
+        print()
 
         return cols
             

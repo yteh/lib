@@ -29,6 +29,7 @@ def checkDfInfo(df, only_na=False):
         print('{:3}) | {:40} | {:15} | {:15} ({:6.2f}%)'.format(i, col, str(df[col].dtype), nb_missing, pr_missing))
     
     print('=' * 93)
+    print()
 
 
 def plotPearsonCorr(df, figsize=(10,10)):
