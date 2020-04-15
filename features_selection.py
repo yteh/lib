@@ -94,7 +94,7 @@ class RegressionSelector:
 
                 cols.remove(idxmax_pvalue)
                 rmse.append(rmse_score)
-                self.__recordEliminatedFeature(cols[idxmax_pvalue])
+                self.__recordEliminatedFeature(idxmax_pvalue)
             else:
                 break
 
