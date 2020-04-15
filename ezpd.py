@@ -45,7 +45,7 @@ def plotPearsonCorr(df, figsize=(10,10)):
     mask[np.triu_indices_from(mask, k=1)] = True  # mask the upper right triangle
     
     plt.figure(figsize=figsize)
-    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='RdBu_r')
+    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='RdBu_r', cbar=False)
     ax.set_title('Pearson Correlation')
     plt.show()
 

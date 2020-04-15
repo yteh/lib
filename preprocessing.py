@@ -1,14 +1,15 @@
 """
 TODO:
 1. create a function which can help auto generate schema file
- 
+
 """
 
 import pandas as pd
 import numpy  as np
 import json
 
-from sklearn.preprocessing import LabelEncoder, Imputer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.impute        import SimpleImputer
 
 
 class DataTransform:
@@ -89,7 +90,7 @@ class DataTransform:
         """
 
         for col in cols:
-            imputer = Imputer(strategy=strategy)
+            imputer = SimpleImputer(strategy=strategy)
             df[col] = imputer.fit_transform(df[col])
 
             self.imputer_[col] = imputer
