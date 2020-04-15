@@ -50,12 +50,13 @@ class RegressionSelector:
             print('Please called \'Elimination\' method before plotting')
             return False
 
+        tmp = {k: v for k, v in sorted(self.elim_feat_.items(), key=lambda item: item[1], reverse=True)}
+        cols, rank = list(tmp.keys()), list(tmp.values())
 
-        cols, rank = self.elim_feat_.keys(), self.elim_feat_.values()
-
-        ax = sns.barplot(x=cols, y=rank)
+        ax = sns.barplot(x=cols, y=rank, color='deepskyblue')
         ax.set_title('Ranking for each Eliminated Features')
         ax.set_xlabel('Eliminated Features')
+        ax.set_xticklabels(labels=cols, rotation=90)
         ax.set_ylabel('Rank')
         plt.show()
 
