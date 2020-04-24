@@ -54,7 +54,7 @@ class RegressionSelector:
         cols, rank = list(tmp.keys()), list(tmp.values())
 
         ax = sns.barplot(x=cols, y=rank, color='deepskyblue')
-        ax.set_title('Ranking for each Eliminated Features')
+        ax.set_title(f'Ranking for the %d Eliminated Features' % len(cols))
         ax.set_xlabel('Eliminated Features')
         ax.set_xticklabels(labels=cols, rotation=90)
         ax.set_ylabel('Rank')
