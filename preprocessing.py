@@ -13,6 +13,7 @@ import json
 from sklearn.preprocessing import LabelEncoder
 from sklearn.impute        import SimpleImputer
 from scipy.stats           import skew, boxcox
+from scipy.special         import boxcox1p
 
 
 class DataTransform:
@@ -122,8 +123,8 @@ class DataTransform:
         return DataFrame with log transformed on outlier features
         """
 
-        # fail safe, to prevent error
-        # find the numerical features
+        # error prevention mechanism
+        # to find and transform numerical features only
         numerical_features = df.select_dtypes(exclude=['object']).columns
         numeric_df = df[numerical_features]
 
@@ -156,17 +157,17 @@ class DataTransform:
                 ax.set_title(f'%s (After, Method: %s, Skewness: %.3f)' % (col, self.skew_transform_[col]['method'], self.skew_transform_[col]['after']))
                 plt.show()
 
-        df[skew_features] = transformed
+        df.loc[:, skew_features] = transformed
 
         return df
 
 
     def __autoTransform(self, df, col):
-        methods      = ['log1p', 'sqrt', 'boxcox']
+        methods      = ['log1p', 'sqrt', 'boxcox', 'boxcox1p']
 
         # boxcox can work on positive value only
         if df[col].min() > 0:
-            transformed  = [np.log1p(df[col]), np.sqrt(df[col]), boxcox(df[col])[0]]
+            transformed  = [np.log1p(df[col]), np.sqrt(df[col]), boxcox(df[col])[0], boxcox1p(df[col], 0.15)]
 
         # exclude boxcox transform if negative value present
         else:
