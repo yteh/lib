@@ -148,7 +148,7 @@ class DataTransform:
             for idx, col in enumerate(skew_features):
                 if self.skew_transform_[col]['method'] == 'default': continue
 
-                fig, axs = plt.subplots(1, 2)
+                _, axs = plt.subplots(1, 2)
                 ax = sns.distplot(df[col], ax=axs[0], bins=100)
                 ax.set_title(f'%s (Before, Skewness: %.3f)' % (col, self.skew_transform_[col]['before']))
                 
@@ -156,8 +156,6 @@ class DataTransform:
                 ax.set_title(f'%s (After, Method: %s, Skewness: %.3f)' % (col, self.skew_transform_[col]['method'], self.skew_transform_[col]['after']))
                 plt.show()
 
-        print(transformed.shape)
-        print(df[skew_features].shape)
         df[skew_features] = transformed
 
         return df
