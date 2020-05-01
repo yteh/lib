@@ -81,9 +81,6 @@ class DataTransform:
         # one hot encode each column 
         df = pd.get_dummies(df, columns=cols, dummy_na=True)
 
-        # drop the orginal column
-        df = df.drop(columns=cols, axis=1)
-
         return df
 
     def oneHotEncodedTransform(self, df):
