@@ -62,8 +62,6 @@ class DataTransform:
             return df
 
         for col in self.label_encoder_:
-            le_dict = zip(self.label_encoder_[col].classes_, self.label_encoder_[col].transform(self.label_encoder_[col].classes_))
-            df[col] = df[col].apply(lambda x: )
             df[col] = self.label_encoder_[col].transform(df[col])
             
         return df
