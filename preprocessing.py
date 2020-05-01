@@ -90,8 +90,12 @@ class DataTransform:
         return a one-hot-encoded DataFrame
         """
 
+        # one-hot-encode features
+        df = pd.get_dummies(df, columns=list(self.one_hot_encoder_.keys()), dummy_na=False)
+
+        # post processing
         train_cols = list(self.one_hot_encoder_.keys())
-        test_cols  = list(df.keys())
+        test_cols  = list(df.columns())
         unq_cols   = train_cols + test_cols
         unq_cols   = set(unq_cols)
 
