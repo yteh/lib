@@ -1,6 +1,7 @@
 """
 TODO:
 1. create a function which can help auto generate schema file
+2. Fixed the error on labelEncoderTransform when the label not exist in labelEncoder
 
 """
 
@@ -27,6 +28,7 @@ class DataTransform:
         self.label_encoder_ = {}
         self.imputer_ = {}
         self.skew_transform_ = {}
+        self.one_hot_encoder_ = []
 
 
     def labelEncoder(self, df, cols=[]):
@@ -60,12 +62,14 @@ class DataTransform:
             return df
 
         for col in self.label_encoder_:
+            le_dict = zip(self.label_encoder_[col].classes_, self.label_encoder_[col].transform(self.label_encoder_[col].classes_))
+            df[col] = df[col].apply(lambda x: )
             df[col] = self.label_encoder_[col].transform(df[col])
             
         return df
 
-    @staticmethod
-    def oneHotEncoded(df, cols=[]):
+
+    def oneHotEncoded(self, df, cols=[]):
         """
         - df   : pandas DataFrame
         - cols : 1-D list of columns name to encode
@@ -73,14 +77,36 @@ class DataTransform:
         return one hot encoded DataFrame
         """
 
-        for col in cols:
-            # one hot encode each column and 
-            # merge it with the original df
-            dummies = pd.get_dummies(df[col], prefix=col)
-            df      = pd.concat([df, dummies], axis=1)
+        # save the ohe columns
+        self.one_hot_encoder_ = {col: df[col].unique() for col in cols}
+
+        # one hot encode each column 
+        df = pd.get_dummies(df, columns=cols, dummy_na=True)
 
         # drop the orginal column
         df = df.drop(columns=cols, axis=1)
+
+        return df
+
+    def oneHotEncodedTransform(self, df):
+        """
+        - df   : pandas DataFrame
+
+        return a one-hot-encoded DataFrame
+        """
+
+        train_cols = list(self.one_hot_encoder_.keys())
+        test_cols  = list(df.keys())
+        unq_cols   = train_cols + test_cols
+        unq_cols   = set(unq_cols)
+
+        # align the df features with features in training set
+        for col in unq_cols:
+            if col not in train_cols:
+                df = df.drop(columns=col)
+
+            elif col not in test_cols:
+                df[col] = np.zeros(df.shape[0], dtype=np.int)
 
         return df
 

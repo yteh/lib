@@ -11,7 +11,7 @@ def checkDfInfo(df, only_na=False):
     return a pretty print DataFrame info
     """
     
-    col_w_na = [col for col in df.columns if df.loc[df[col].isna() == True, col].shape[0] > 0]
+    col_w_na = [col for col in df.columns if df[col].isna().sum() > 0]
     columns  = df.columns if only_na == False else col_w_na
     nb_rows  = df.shape[0]
     nb_numerical_feat = len(df.select_dtypes(exclude=['object']).columns)
@@ -19,9 +19,9 @@ def checkDfInfo(df, only_na=False):
     
     print('Number of examples: ', nb_rows)
     print('Number of features: ', len(df.columns))
-    print('Number of features with missing value: ', len(col_w_na))
     print('Number of numerical features: ', nb_numerical_feat)
     print('Number of categorical features: ', nb_categorical_feat)
+    print('Number of features with missing value: ', len(col_w_na))
     
     print('=' * 93)
     print('{:3}  | {:40} | {:15} | {:25}'.format('Idx', 'Name', 'dtype', 'Nb of Missing Values (%)'))
