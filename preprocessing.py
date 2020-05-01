@@ -75,34 +75,33 @@ class DataTransform:
         return one hot encoded DataFrame
         """
 
-        # save the ohe columns
-        self.one_hot_encoder_ = {col: df[col].unique() for col in cols}
-
-        # one hot encode each column 
+        # one-hot encoding on the specify features
         df = pd.get_dummies(df, columns=cols, dummy_na=True)
+
+        # save the features for matching later
+        self.train_ohe_ = list(df.columns)
 
         return df
 
-    def oneHotEncodedTransform(self, df):
+    def oneHotEncodedTransform(self, df, cols=[]):
         """
         - df   : pandas DataFrame
+        - cols : 1-D list of columns name to encode
 
         return a one-hot-encoded DataFrame
         """
 
         # one-hot-encode features
-        df = pd.get_dummies(df, columns=list(self.one_hot_encoder_.keys()), dummy_na=False)
+        df = pd.get_dummies(df, columns=cols, dummy_na=False)
 
         # post processing
-        train_cols = list(self.one_hot_encoder_.keys())
-        test_cols  = list(df.columns())
-        unq_cols   = train_cols + test_cols
-        unq_cols   = set(unq_cols)
+        test_cols  = list(df.columns)
+        unq_cols   = set(self.train_ohe_ + test_cols)
 
         # align the df features with features in training set
         for col in unq_cols:
-            if col not in train_cols:
-                df = df.drop(columns=col)
+            if col not in self.train_ohe_:
+                df = df.drop(columns=col, axis=1)
 
             elif col not in test_cols:
                 df[col] = np.zeros(df.shape[0], dtype=np.int)
