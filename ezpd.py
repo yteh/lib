@@ -2,6 +2,7 @@ import pandas            as pd
 import numpy             as np
 import matplotlib.pyplot as plt
 import seaborn           as sns
+import psycopg2
 
 
 def checkDfInfo(df, only_na=False):
@@ -73,3 +74,19 @@ def plotFeatureImportance(feature_importance, columns, n_largest=None, figsize=(
     ax = sns.barplot(x='Coef', y='Features', data=top_n_feat)
     ax.set_title(f'Top %d Feature Importance' % n_largest)
     plt.show()
+
+
+def dataQuery(sql, credentials_path='credentials.json'):
+    credentials = pd.read_json(credentials_path, typ='series')
+    
+    conn = psycopg2.connect(dbname = credentials.dbname,
+                            host = credentials.host,
+                            port = credentials.port,
+                            user = credentials.user,
+                            password = credentials.password)
+
+    data = pd.read_sql_query(sql, conn)
+
+    conn.close()
+    
+    return data
