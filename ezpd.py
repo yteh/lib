@@ -3,6 +3,7 @@ import numpy             as np
 import matplotlib.pyplot as plt
 import seaborn           as sns
 import psycopg2
+import os
 
 
 def checkDfInfo(df, only_na=False):
@@ -90,3 +91,23 @@ def dataQuery(sql, credentials_path='credentials.json'):
     conn.close()
     
     return data
+
+
+def convertBytes(num):
+    """
+    this function will convert bytes to MB.... GB... etc
+    """
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+
+
+def fileSize(DATA_DIR):
+    """
+    this function will return the file size
+    """
+
+    if os.path.isfile(DATA_DIR):
+        file_info = os.stat(DATA_DIR)
+        return convertBytes(file_info.st_size)
