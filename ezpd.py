@@ -5,6 +5,8 @@ import seaborn           as sns
 import psycopg2
 import os
 
+from datetime import datetime
+
 
 def checkDfInfo(df, only_na=False):
     """
@@ -111,3 +113,9 @@ def fileSize(DATA_DIR):
     if os.path.isfile(DATA_DIR):
         file_info = os.stat(DATA_DIR)
         return convertBytes(file_info.st_size)
+
+def dtPrint(string):
+    now = datetime.now()
+
+    current_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    print("[{}] {}".format(current_time, string))
