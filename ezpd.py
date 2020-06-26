@@ -77,6 +77,31 @@ def plotFeatureImportance(feature_importance, columns, n_largest=None, figsize=(
     ax = sns.barplot(x='Coef', y='Features', data=top_n_feat)
     ax.set_title(f'Top %d Feature Importance' % n_largest)
     plt.show()
+    
+    
+def print_psycopg2_exception(err):
+    """
+    Show the error message from psycopg
+    
+    :param err: Exception
+    """
+    
+    # get details about the exception
+    err_type, err_obj, traceback = sys.exc_info()
+
+    # get the line number when exception occured
+    line_num = traceback.tb_lineno
+
+    # print the connect() error
+    print ("\npsycopg2 ERROR:", err, "on line number:", line_num)
+    print ("psycopg2 traceback:", traceback, "-- type:", err_type)
+
+    # psycopg2 extensions.Diagnostics object attribute
+    print ("\nextensions.Diagnostics:", err.diag)
+
+    # print the pgcode and pgerror exceptions
+    print ("pgerror:", err.pgerror)
+    print ("pgcode:", err.pgcode, "\n")
 
 
 def dataQuery(sql, credentials_path='credentials.json'):
@@ -87,12 +112,19 @@ def dataQuery(sql, credentials_path='credentials.json'):
                             port = credentials.port,
                             user = credentials.user,
                             password = credentials.password)
-
-    data = pd.read_sql_query(sql, conn)
-
-    conn.close()
     
-    return data
+    try:
+        data = pd.read_sql_query(sql, conn)
+        
+        conn.close()
+        
+        return data
+    except:
+        conn.close()
+        
+        print_psycopg2_exception(err)
+        
+        sys.exit()
 
 
 def convertBytes(num):
