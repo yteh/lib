@@ -120,7 +120,7 @@ def dataQuery(sql, credentials_path='credentials.json'):
         conn.close()
         
         return data
-    except:
+    except Exception as err:
         conn.close()
         
         print_psycopg2_exception(err)
