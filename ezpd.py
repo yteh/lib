@@ -27,16 +27,17 @@ def checkDfInfo(df, only_na=False):
     print('Number of categorical features: ', nb_categorical_feat)
     print('Number of features with missing value: ', len(col_w_na))
     
-    print('=' * 98)
-    print('{:3}  | {:40} | {:20} | {:25}'.format('Idx', 'Name', 'dtype', 'Nb of Missing Values (%)'))
-    print('=' * 98)
+    print('=' * 118)
+    print('{:3}  | {:60} | {:20} | {:25}'.format('Idx', 'Name', 'dtype', 'Nb of Missing Values (%)'))
+    print('=' * 118)
     
     for i, col in enumerate(columns):
         nb_missing = df[col].isna().sum()
         pr_missing = nb_missing / nb_rows * 100
-        print('{:3}) | {:40} | {:20} | {:15} ({:6.2f}%)'.format(i, col, str(df[col].dtype), nb_missing, pr_missing))
+        if len(col) > 60: col = str(col)[:57] + '...';
+        print('{:3}) | {:60} | {:20} | {:15} ({:6.2f}%)'.format(i, col, str(df[col].dtype), nb_missing, pr_missing))
     
-    print('=' * 98)
+    print('=' * 118)
     print()
 
 
