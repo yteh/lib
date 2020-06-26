@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn           as sns
 import psycopg2
 import os
+import sys
 
 from datetime import datetime
 
