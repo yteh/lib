@@ -115,6 +115,8 @@ def dataQuery(sql, credentials_path='credentials.json'):
                             user = credentials.user,
                             password = credentials.password)
     
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    
     try:
         data = pd.read_sql_query(sql, conn)
         
